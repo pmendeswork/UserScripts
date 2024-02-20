@@ -1,7 +1,9 @@
 // ==UserScript==
 // @name         SQL Parameter Replacer
 // @namespace    https://github.com/pmendeswork
-// @version      0.1
+// @downloadURL  https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
+// @updateURL    https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
+// @version      0.2
 // @description  Replace SQL query parameters with default values from the table on the page
 // @author       Pedro Mendes [pm.mendes.work@gmail.com]
 // @match        https://*/geoserver/*
@@ -10,7 +12,7 @@
 
 (function () {
     'use strict';
-
+    console.log('test update');
     console.log(`
 __________           .___                  _____                     .___
 \\______   \\ ____   __| _/______  ____     /     \\   ____   ____    __| _/____   ______
