@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         SQL Parameter Replacer
+// @name         Geoserver SQL Parameter Replacer
 // @namespace    https://github.com/pmendeswork
 // @downloadURL  https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
 // @updateURL    https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
@@ -10,20 +10,46 @@
 // @grant        unsafeWindow
 // ==/UserScript==
 
-(function () {
+unsafeWindow.debug = false;
+
+(function() {
     'use strict';
-    console.log('test update');
-    console.log(`
-__________           .___                  _____                     .___
-\\______   \\ ____   __| _/______  ____     /     \\   ____   ____    __| _/____   ______
- |     ___// __ \\ / __ |\\_  __ \\/  _ \\   /  \\ /  \\_/ __ \\ /    \\  / __ |/ __ \\ /  ___/
- |    |   \\  ___// /_/ | |  | \\(  <_> ) /    Y    \\  ___/|   |  \\/ /_/ \\  ___/ \\___ \\
- |____|    \\___  >____ | |__|   \\____/  \\____|__  /\\___  >___|  /\\____ |\\___  >____  >
-               \\/     \\/                        \\/     \\/     \\/      \\/    \\/     \\/
+console.log(`
+   _____                                           _    _ _   _ _
+  / ____|                                         | |  | | | (_) |
+ | |  __  ___  ___  ___  ___ _ ____   _____ _ __  | |  | | |_ _| |___
+ | | |_ |/ _ \\/ _ \\/ __|/ _ \\ '__\\ \\ / / _ \\ '__| | |  | | __| | / __|
+ | |__| |  __/ (_) \\__ \\  __/ |   \\ V /  __/ |    | |__| | |_| | \\__ \\
+  \\_____|\\___|\\___/|___/\\___|_|    \\_/ \\___|_|     \\____/ \\__|_|_|___/
+
+
 `);
-    var i = 0;
+
     var ui = {
         DOM: {
+            create: {
+                textarea: (rows, cols, name, id) => {
+                    return `<textarea id="${id}" rows="${rows}" cols="${cols}" name="${name}" style="width: 70%; height: 200px;"></textarea>`;
+                },
+                divWithElement(elementType, className, labelText, innerElement) {
+                    // Create the outer div element
+                    var divElement = document.createElement("div");
+                    divElement.classList.add(className);
+
+                    // Create the label element
+                    var labelElement = document.createElement("label");
+                    labelElement.setAttribute("for", "name");
+                    labelElement.textContent = labelText;
+
+                    // Append the label to the outer div
+                    divElement.appendChild(labelElement);
+
+                    // Append the inner element to the outer div
+                    divElement.appendChild(innerElement);
+
+                    return divElement;
+                }
+            },
             createElementFromHTML: (htmlString) => {
                 // Create a document fragment to hold the nodes
                 var fragment = document.createDocumentFragment();
@@ -59,11 +85,16 @@ __________           .___                  _____                     .___
             }
 
         },
+        geoserver: {
+            isSQLView: () => {
+                return document.getElementById("header-title").textContent === 'Edit SQL view';
+            }
+        },
         success: (message) => {
             let topFeedback = ui.DOM.createTopFeedback();
             ui.DOM.updateTopFeedbackMessage(message);
         },
-        parseTable: function () {
+        parseTable: function() {
             // Start from the label and find the nearest table
             const labelForParameters = document.querySelector('label[for="parameters"]');
             if (!labelForParameters) return;
@@ -79,36 +110,11 @@ __________           .___                  _____                     .___
 
     if (document.readyState == "complete" || document.readyState == "loaded" || document.readyState == "interactive") {
 
-
-        // Define the Konami Code sequence
-        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        let konamiCodeIndex = 0;
-
-        // Event listener for keyboard input
-        document.addEventListener('keydown', function (event) {
-            // Check if the pressed key matches the current position in the Konami Code sequence
-            if (event.key.toLowerCase() === konamiCode[konamiCodeIndex].toLowerCase()) {
-                konamiCodeIndex++;
-
-                // If the entire sequence is entered correctly
-                if (konamiCodeIndex === konamiCode.length) {
-                    executeKonamiFunction(); // Call your function here
-                    konamiCodeIndex = 0; // Reset the sequence
-                }
-            } else {
-                konamiCodeIndex = 0; // Reset the sequence if a wrong key is pressed
-            }
-        });
-
-        // Function to execute when the Konami Code is entered
-        function executeKonamiFunction() {
-            console.log('Konami Code activated!');
-            // Your custom functionality goes here
-        }
         //Check if sql view
-        if (isSQLView()) {
+        if (ui.geoserver.isSQLView()) {
             //Check if query has params
             let hasAnyParams = ui.parseTable()?.querySelectorAll('tbody tr');
+
             if (hasAnyParams.length > 0) {
                 parseAndSaveOriginalQuery();
                 addQueryLink();
@@ -120,7 +126,7 @@ __________           .___                  _____                     .___
 
         }
     } else {
-        document.addEventListener("DOMContentLoaded", function (event) {
+        document.addEventListener("DOMContentLoaded", function(event) {
             if (isSQLView()) {
                 addQueryLink();
                 addUrlInput();
@@ -200,11 +206,15 @@ __________           .___                  _____                     .___
             if (inputs.length >= 2) {
                 const paramName = inputs[0].value.trim();
                 const paramValue = inputs[1].value.trim();
-                console.debug("DEFAULT VALUE: [" + paramName + "] " + paramValue);
+                if (unsafeWindow.debug) {
+                    console.debug("DEFAULT VALUE: [" + paramName + "] " + paramValue);
+                }
                 if (view_params_from_url !== undefined) {
                     // Check if paramName exists in view_params_from_url
                     paramFromUrl = view_params_from_url[paramName];
-                    console.debug("URL VALUE: [" + paramName + "] " + paramFromUrl);
+                    if (unsafeWindow.debug) {
+                        console.debug("URL VALUE: [" + paramName + "] " + paramFromUrl);
+                    }
                 }
 
                 const valueToUse = paramFromUrl !== undefined ? paramFromUrl : paramValue;
@@ -260,30 +270,23 @@ __________           .___                  _____                     .___
 
     function addUrlInput() {
         const page_header = document.querySelector(".page-header");
-        let url_html_text = createTextarea(60, 20, "query_url", "query_url");
+        let url_html_text = ui.DOM.create.textarea(60, 20, "query_url", "query_url");
         let url_text_elem = ui.DOM.createElementFromHTML(url_html_text);
         //page_header.insertAdjacentElement('afterend', url_text_elem);
 
-        var customElement = createDivWithElement("input", "mb-3", "Url to parse parameters from:", url_text_elem);
+        var customElement = ui.DOM.create.divWithElement("input", "mb-3", "Url to parse parameters from:", url_text_elem);
         page_header.insertAdjacentElement('afterend', customElement);
-
-
     }
 
     function addQueryLink() {
 
-        console.log("appending");
         const labelForParameters = document.querySelector('label[for="parameters"]');
         if (!labelForParameters) return;
 
         const link = document.createElement('a');
         link.href = "javascript:;";
-        link.id = "id1d5";
         link.innerText = "Get SQL Query With Parameters Replacement";
         link.addEventListener('click', processSQLQuery);
-
-        //const spacing = document.createTextNode("&nbsp;&nbsp;&nbsp;&nbsp;"); // equivalent to "&nbsp;&nbsp;&nbsp;&nbsp;"
-        //const spacing = document.createTextNode("\u00A0\u00A0\u00A0\u00A0 ze manel"); // equivalent to "&nbsp;&nbsp;&nbsp;&nbsp;"
 
         labelForParameters.insertAdjacentElement('afterend', link);
         link.insertAdjacentHTML('afterend', '&nbsp;&nbsp;&nbsp;&nbsp;');
@@ -295,33 +298,4 @@ __________           .___                  _____                     .___
             return navigator.clipboard.writeText(str);
         return Promise.reject('The Clipboard API is not available.');
     };
-
-
-
-    function isSQLView() {
-        return document.getElementById("header-title").textContent === 'Edit SQL view';
-    }
-
-    function createTextarea(rows, cols, name, id) {
-        return `<textarea id="${id}" rows="${rows}" cols="${cols}" name="${name}" style="width: 70%; height: 200px;"></textarea>`;
-    }
-
-    function createDivWithElement(elementType, className, labelText, innerElement) {
-        // Create the outer div element
-        var divElement = document.createElement("div");
-        divElement.classList.add(className);
-
-        // Create the label element
-        var labelElement = document.createElement("label");
-        labelElement.setAttribute("for", "name");
-        labelElement.textContent = labelText;
-
-        // Append the label to the outer div
-        divElement.appendChild(labelElement);
-
-        // Append the inner element to the outer div
-        divElement.appendChild(innerElement);
-
-        return divElement;
-    }
 })();
