@@ -3,7 +3,7 @@
 // @namespace    https://github.com/pmendeswork
 // @downloadURL  https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
 // @updateURL    https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
-// @version      0.6
+// @version      0.7
 // @description  Replace SQL query parameters with default values from the table on the page
 // @author       Pedro Mendes [pm.mendes.work@gmail.com]
 // @match        https://*/geoserver/*
@@ -249,14 +249,11 @@ console.log('init 1')
 
         ui.sql.scripts.define.generate_statements(parameters);
 
-        sqlQuery = replaceParameters(sqlQuery, parameters);
+        copyToClipboard(replaceParameters(sqlQuery, parameters));
 
-        //const fullQuery = defineStatements + '\n' + sqlQuery;
-
-        console.log("Processed SQL Query:", sqlQuery);
-        sqlTextarea.value = sqlQuery;
-
-        ui.success('Query processada com sucesso.');
+        console.log('%cProcessed SQL Query:', 'background: green; color: white; padding: 2px;', sqlQuery);
+    
+        ui.success('Query processada com sucesso. Foi copiada para o clipboard a query com os parametros substituidos.');
     }
 
     let generateDefineOutput = (parameters) => {
