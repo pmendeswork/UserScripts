@@ -280,7 +280,11 @@ console.log('init 1')
 
             // Split into individual key-value pairs and populate the map
             decodedViewParams.split(';').forEach(kv => {
-                const [key, value] = kv.split(':');
+                // const [key, value] = kv.split(':');
+                // viewParamsMap[key] = value;
+                let index = kv.indexOf(':');
+                let key = kv.substring(0, index);
+                let value = kv.substring(index + 1);
                 viewParamsMap[key] = value;
             });
             return viewParamsMap;
