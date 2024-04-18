@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Geoserver SQL Parameter Replacer
+// @name         Geoserver SQL Parameter Replacer v
 // @namespace    https://github.com/pmendeswork
 // @downloadURL  https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
 // @updateURL    https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
-// @version      0.4
+// @version      0.5
 // @description  Replace SQL query parameters with default values from the table on the page
 // @author       Pedro Mendes [pm.mendes.work@gmail.com]
 // @match        https://*/geoserver/*
@@ -26,16 +26,30 @@ console.log(`
 `);
     const script = {
         init: () => {
-            if (!isSQLView()) return;
-    
+            if (!ui.geoserver.isSQLView()) return;
+            //Check if query has params
+            const hasAnyParams = ui.parseTable()?.querySelectorAll('tbody tr');
+            if (hasAnyParams.length > 0) {
+                parseAndSaveOriginalQuery();
+                addQueryLink();
+                addUrlInput();
+            } else {
+                alert('query has no params.')
+            }
+
             const originalSql = parseAndSaveOriginalQuery();
             if (!originalSql) {
-                debug('SQL view has no query.');
+                console.debug('SQL view has no query.');
                 return;
             }
         }
     };
-    
+
+
+
+
+
+
     var ui = {
         DOM: {
             create: {
@@ -140,24 +154,11 @@ console.log(`
     var geoserver_sql;
 
     if (document.readyState == "complete" || document.readyState == "loaded" || document.readyState == "interactive") {
-
-        //Check if sql view
-        if (ui.geoserver.isSQLView()) {
-            //Check if query has params
-            let hasAnyParams = ui.parseTable()?.querySelectorAll('tbody tr');
-
-            if (hasAnyParams.length > 0) {
-                parseAndSaveOriginalQuery();
-                addQueryLink();
-                addUrlInput();
-            } else {
-                alert('query has no params.')
-            }
-
-
-        }
+console.log('init 1')
+       script.init();
     } else {
         document.addEventListener("DOMContentLoaded", function(event) {
+            console.log('init 2')
             if (isSQLView()) {
                 addQueryLink();
                 addUrlInput();
@@ -174,7 +175,7 @@ console.log(`
         unsafeWindow.geoserver_sql = geoserver_sql;
     }
 
-    
+
 
     function replaceParameters(sql, parameters) {
         for (const param in parameters) {
