@@ -3,7 +3,7 @@
 // @namespace    https://github.com/pmendeswork
 // @downloadURL  https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
 // @updateURL    https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
-// @version      0.3
+// @version      0.4
 // @description  Replace SQL query parameters with default values from the table on the page
 // @author       Pedro Mendes [pm.mendes.work@gmail.com]
 // @match        https://*/geoserver/*
@@ -24,7 +24,18 @@ console.log(`
 
 
 `);
-
+    const script = {
+        init: () => {
+            if (!isSQLView()) return;
+    
+            const originalSql = parseAndSaveOriginalQuery();
+            if (!originalSql) {
+                debug('SQL view has no query.');
+                return;
+            }
+        }
+    };
+    
     var ui = {
         DOM: {
             create: {
@@ -85,6 +96,26 @@ console.log(`
             }
 
         },
+        sql: {
+            scripts : {
+                define: {
+                     generate_statements(parameters) {
+                        let defineStatements = '';
+                        for (const param in parameters) {
+                            const paramValue = parameters[param];
+                            if (paramValue.includes(',')) {
+                                // If the parameter value contains commas, enclose it in double quotes
+                                defineStatements += `DEFINE ${param}="${paramValue}";\n`;
+                            } else {
+                                // Otherwise, no need for quotes
+                                defineStatements += `DEFINE ${param}=${paramValue};\n`;
+                            }
+                        }
+                        return defineStatements;
+                    }
+                }
+            }
+        },
         geoserver: {
             isSQLView: () => {
                 return document.getElementById("header-title").textContent === 'Edit SQL view';
@@ -143,20 +174,7 @@ console.log(`
         unsafeWindow.geoserver_sql = geoserver_sql;
     }
 
-    function generateDefineStatements(parameters) {
-        let defineStatements = '';
-        for (const param in parameters) {
-            const paramValue = parameters[param];
-            if (paramValue.includes(',')) {
-                // If the parameter value contains commas, enclose it in double quotes
-                defineStatements += `DEFINE ${param}="${paramValue}";\n`;
-            } else {
-                // Otherwise, no need for quotes
-                defineStatements += `DEFINE ${param}=${paramValue};\n`;
-            }
-        }
-        return defineStatements;
-    }
+    
 
     function replaceParameters(sql, parameters) {
         for (const param in parameters) {
@@ -225,7 +243,7 @@ console.log(`
         });
 
 
-        generateDefineOutput(parameters);
+        ui.sql.scripts.define.generate_statements(parameters);
 
         sqlQuery = replaceParameters(sqlQuery, parameters);
 
