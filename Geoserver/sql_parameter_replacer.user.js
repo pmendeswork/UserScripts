@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Geoserver SQL Parameter Replacer v
+// @name         Geoserver SQL Parameter Replacer v2
 // @namespace    https://github.com/pmendeswork
 // @downloadURL  https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
 // @updateURL    https://raw.githubusercontent.com/pmendeswork/UserScripts/master/Geoserver/sql_parameter_replacer.js
