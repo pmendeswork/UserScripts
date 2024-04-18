@@ -237,6 +237,9 @@ console.log('init 1')
                 }
 
                 const valueToUse = paramFromUrl !== undefined ? paramFromUrl : paramValue;
+                if(unsafeWindow.debug){
+                    console.log('%cUsing', 'background: green; color: white; padding: 2px;', valueToUse);
+                }
                 if (parameters.hasOwnProperty(paramName)) {
                     parameters[paramName] = valueToUse;
                 }
