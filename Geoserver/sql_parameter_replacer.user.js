@@ -263,6 +263,7 @@ console.log('init 1')
         const fullDefineScript = '\n' + defineStatements + '\n' + replaceWithDefineVariables(geoserver_sql);
         console.debug(fullDefineScript);
         copyToClipboard(fullDefineScript);
+        //touch
         console.log('----------------------  END DEFINE ----------------------');
     }
 
