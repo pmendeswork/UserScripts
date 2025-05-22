@@ -1,6 +1,8 @@
 // ==UserScript==
 // @name         Anexar Tabelas WMS e Áreas v2
 // @namespace    https://github.com/pmendeswork
+// @downloadURL  https://github.com/pmendeswork/UserScripts/raw/refs/heads/master/Geoserver/tabelas_zoom_ids_esquematicos.user.js
+// @updateURL    https://github.com/pmendeswork/UserScripts/raw/refs/heads/master/Geoserver/tabelas_zoom_ids_esquematicos.user.js
 // @version      0.4
 // @description  Adiciona uma tabela de escala WMS e uma tabela Nome/Área, ocultáveis, com botão no canto superior direito e largura automática das tabelas.
 // @author       Seu Nome
