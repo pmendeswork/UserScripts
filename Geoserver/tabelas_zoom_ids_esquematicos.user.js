@@ -3,7 +3,7 @@
 // @namespace    https://github.com/pmendeswork
 // @downloadURL  https://github.com/pmendeswork/UserScripts/raw/refs/heads/master/Geoserver/tabelas_zoom_ids_esquematicos.user.js
 // @updateURL    https://github.com/pmendeswork/UserScripts/raw/refs/heads/master/Geoserver/tabelas_zoom_ids_esquematicos.user.js
-// @version      0.5
+// @version      0.6
 // @description  Adiciona uma tabela de escala WMS e uma tabela Nome/Área, ocultáveis, com botão no canto superior direito e largura automática das tabelas.
 // @author       Seu Nome
 // @match        https://*/*format=application/openlayers*
@@ -16,7 +16,7 @@
 // ==/UserScript==
 // ==/UserScript==
 
-//
+// Olá Alex
 // injeta o CSS do BOOTSTRAP_CSS no page-scope
 const css = GM_getResourceText("BOOTSTRAP_CSS");
 GM_addStyle(css);
