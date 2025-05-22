@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Anexar Tabelas WMS e Áreas v2
+// @name         Tabelas de Zoom e Áreas Esquematicos
 // @namespace    https://github.com/pmendeswork
 // @downloadURL  https://github.com/pmendeswork/UserScripts/raw/refs/heads/master/Geoserver/tabelas_zoom_ids_esquematicos.user.js
 // @updateURL    https://github.com/pmendeswork/UserScripts/raw/refs/heads/master/Geoserver/tabelas_zoom_ids_esquematicos.user.js
