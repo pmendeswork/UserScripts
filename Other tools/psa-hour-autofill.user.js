@@ -5,8 +5,8 @@
 // @updateURL    https://github.com/pmendeswork/UserScripts/raw/refs/heads/master/Other%20tools/psa-hour-autofill.user.js
 // @version      0.1
 // @description  Porque a vida é curta demais para preencher timesheets manualmente! ⏰
-// @author       Pedro Mendes [pm.mendes.work@gmail.com]
-// @match        https://*/geoserver/*
+// @match       *://psa-fs.ent.cgi.com/*
+// @grant       none
 // ==/UserScript==
 
 
