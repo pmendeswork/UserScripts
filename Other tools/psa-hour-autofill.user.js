@@ -1,12 +1,15 @@
 // ==UserScript==
-// @name        Auto Fill Time Fields
-// @namespace   http://tampermonkey.net/
-// @version     0.2
-// @description Automatically fills time fields with 8.00 on PeopleSoft-like pages
-// @author      Your Name
-// @match       *://psa-fs.ent.cgi.com/*
-// @grant       none
+// @name         PSA TimeSheet AutoFiller
+// @namespace    https://github.com/pmendeswork
+// @downloadURL  https://github.com/pmendeswork/UserScripts/raw/refs/heads/master/Other%20tools/psa-hour-autofill.user.js
+// @updateURL    https://github.com/pmendeswork/UserScripts/raw/refs/heads/master/Other%20tools/psa-hour-autofill.user.js
+// @version      0.1
+// @description  Porque a vida é curta demais para preencher timesheets manualmente! ⏰
+// @author       Pedro Mendes [pm.mendes.work@gmail.com]
+// @match        https://*/geoserver/*
 // ==/UserScript==
+
+
 
 (function() {
     'use strict';
